@@ -1,0 +1,101 @@
+\begin{lem}[Sukhatme~\cite{luc-variate-generation, sukhatme}]\lemlabel{sukhatme}
+  Let $U_1, \dots, U_{k - 1}$ be independent identically distributed
+  $\text{Uniform}[0, 1]$ random variables, where $U_{(i)}$ denotes the
+  $i$-th smallest among $U_1, \dots, U_{k - 1}$. Define the spacings
+  $S_i = U_{(i)} - U_{(i - 1)}$, where $U_{(0)} = 0$ and
+  $U_{(k)} = 1$. Then,
+  $(S_1, \dots, S_k) \sim \Dirichlet(1, \dots, 1)$. Moreover, for
+  independent identically distributed standard exponential random
+  variables $E_1, \dots, E_k$,
+  \[
+    S_i \sim \frac{E_i}{\sum_{i = 1}^k E_i} \sim\Beta(1, k - 1)
+  \]
+  for each $1 \le i \le k$, and in particular, if $I$ is some index
+  set of size $j$ for $1 \le j \le k$, then
+  \[
+    \min_{i \in I} S_i \sim \frac{\Beta(1, k - 1)}{j} .
+  \]
+\end{lem}
+
+\begin{lem}\lemlabel{dir-convergence}
+  Let $j \ge k$, and let $T_u$ be the subtree of $T \sim \UA(n, S)$
+  containing the vertex labelled $u$ after removing all edges between
+  vertices $\{u_1, \dots, u_j\}$. Then, as $n \to \infty$,
+  \[
+    \frac{1}{n} (|T_{u_i}| \colon 1 \le i \le j) \overset{d}{\to} \Dirichlet(\underbrace{1, \dots, 1}_{\text{$j$ times}}) .
+  \]
+\end{lem}
+\begin{proof}
+  It suffices to show that the vector
+  $(|T_{u_i}| \colon 1 \le i \le j)$ evolves as a P\'{o}lya urn with
+  $j$ colours, starting with one ball of each colour, and with
+  replacement matrix $I_j$, the $j \times j$ identity
+  matrix~\cite{blackwell}. Indeed, at each step in the attachment
+  process wherein the node $u_n$ is attached, it joins a subtree
+  $T_{u_i}$ with probability proportional to $|T_{u_i}|$ for
+  $1 \le i \le j$, and $T_{u_i}$ gains exactly one vertex.
+\end{proof}
+
+Recall that a real-valued random variable $X$ is said to
+\emph{stochastically dominate} a real-valued random variable $Y$ if,
+for all $x \in \R$,
+\[
+  \Pr\{X \le x\} \le \Pr\{Y \le x\} .
+\]
+
+Let $F_{\alpha, \beta}$ be the cumulative distribution function of a
+$\Beta(\alpha, \beta)$ random variable, and let
+$f_{\alpha, \beta} : [0, 1] \to \R$ be its density. Recall that
+\[
+  f_{\alpha, \beta}(x) = \frac{1}{\mathrm{B}(\alpha, \beta)} x^{\alpha - 1} (1 - x)^{\beta - 1} .
+\]
+\begin{lem}\lemlabel{beta-dom-1}
+  Let $0 < \alpha \le \beta \le \gamma$. Then,
+  $\Beta(\beta, \gamma - \beta)$ stochastically dominates
+  $\Beta(\alpha, \gamma - \alpha)$.
+\end{lem}
+\begin{proof}
+  Let
+  $(Y_1, Y_2, Y_3) \sim \Dirichlet(\alpha, \beta - \alpha, \gamma -
+  \beta)$. Then,
+  \begin{align*}
+    Y_1 &\sim \Beta(\alpha, \gamma - \alpha) , \\
+    Y_1 + Y_2 &\sim \Beta(\beta, \gamma - \beta) ,
+  \end{align*}
+  so, since the former is a partial sum of the latter,
+  \[
+    \Pr\{\Beta(\beta, \gamma - \beta) \le x\} = \Pr\{ Y_1 + Y_2 \le x\} \le \Pr\{ Y_1 \le x\} = \Pr\{\Beta(\alpha, \gamma - \alpha) \le x\} . \qedhere
+  \]
+\end{proof}
+
+\begin{lem}\lemlabel{beta-dom-2}
+  Let $0 < \alpha \le \beta$. Then, $\Beta(1,
+  \alpha)$ stochastically dominates $\Beta(1, \beta)$.
+\end{lem}
+\begin{proof}
+  We see, directly, for $x \in [0, 1]$,
+  \[
+    F_{1, \alpha}(x) = \alpha \int_0^x (1 - z)^{\alpha - 1} \dif z = 1 - (1 - x)^\alpha ,
+  \]
+  so clearly
+  $F_{1, \alpha}(x) \le F_{1, \beta}(x) \iff (1 - x)^\alpha \ge (1 -
+  x)^\beta \iff \alpha \le \beta$.
+\end{proof}
+
+\begin{lem}\lemlabel{beta-conc}
+  Let $0 < \ell < k$. Then,
+  \[
+    \Pr\left\{\left|\Beta(k - \ell, \ell) - \frac{k - \ell}{k}\right| \le \frac{1}{\sqrt{k}} \right\} \ge \frac{3}{4} .
+  \]
+\end{lem}
+\begin{proof}
+  By Chebyshev's inequality,
+  \[
+    \Pr\left\{\left|\Beta(k - \ell, \ell) - \frac{k - \ell}{k}\right| \ge 2 \sqrt{\frac{(k - \ell) \ell}{k^2 (k + 1)}}\right\} \le \frac{1}{4} .
+  \]
+  By the arithmetic-geometric mean inequality,
+  \[
+    2 \sqrt{\frac{(k - \ell) \ell}{k^2 (k + 1)}} \le \frac{1}{\sqrt{k + 1}} ,
+  \]
+  and the result follows.
+\end{proof}

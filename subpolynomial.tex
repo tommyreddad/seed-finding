@@ -1,0 +1,174 @@
+For a tree $T$ and $u \in V(T)$, let
+\[
+  \varphi_T(u) = \prod_{v \in V(T) - \{u\}} |(T, u)_{v \downarrow}| ,
+\]
+omitting the $T$ subscript when $T$ is understood. We note, as noted
+by Bubeck, Devroye, and Lugosi in \cite{finding-adam}, that
+$1/\varphi$ resembles the expression of the likelihood in
+\eqref{likelihood}, so that nodes with small values of $\varphi$
+should be likely candidates for the root. For $K \ge 1$, let
+$H^*_{\varphi; K}(T^\circ)$ denote the set of $K$ vertices in
+$T^\circ$ minimizing their values of $\varphi$. In
+\cite{finding-adam}, it is shown that $H^*_{\varphi; K}$ serves as an
+effective root-finding algorithm for $T \sim \UA(n)$. We show that
+this is also the case when $T \sim \UA(n, S)$.
+
+\begin{prop}
+  There are universal constants $c_1, c_2, c_3, c_4 > 0$ such that if
+  $k > c_1$,
+  $\eps \le \exp\left\{- c_2 (\log k)^{11} \right\}$, and
+  \[
+    K \ge c_3 \exp \left\{ c_4 \frac{\log (1/\eps)}{\log \log (1/\eps) + \log \log k } \right\} ,
+  \]
+  then
+  \[
+    \Pr\{ |V(S) \cap H^*_{\varphi; K}(T^\circ)| \ge 1\} \ge 1 - \eps .
+  \]
+\end{prop}
+\begin{proof}
+  Let $u$ be a vertex of $S$, and label each node
+  $v \in (T, S)_{u \downarrow}$ using an extended version of the
+  labelling scheme from \cite{finding-adam}, where every node of $T$
+  gets a label in
+  \[
+    \N^* = \N \cup \N^2 \cup \N^3 \cup \dots ,
+  \]
+  such that if we write $v = (u, j_1, \dots, j_\ell)$, we mean that
+  $v \in (T, S)_{u \downarrow}$, and that $v$ is the $j_\ell$-th child
+  of $(u, j_1, \dots, j_{\ell - 1})$. Let also
+  \[
+    s(v) = \sum_{i = 1}^\ell (\ell - i + 1) j_i ,
+  \]
+  which we denote by $s$ when the node $v$ is understood. Let $u_*$ be
+  the node of $S$ minimizing its value of $\varphi$ in $T$, so
+  \[
+    \varphi(u_*) = \min_{u \in S} \varphi(u) .
+  \]
+  Let $K$ and $K'$ be related such that $K = |\{v \in (T, S)_{u_* \downarrow} \colon s(v) \le 3 K'\}|$. Then,
+  \begin{align}
+    \Pr\{u_* \not\in H_{\varphi; K}(T^\circ)\} &\le \Pr\{\exists v \colon s(v) > 3K' \text{ and } \varphi(v) \le \varphi(u_*) \} \notag \\
+                                             &= \Pr\{\exists u \in S, \, v \in (T, S)_{u \downarrow} \colon s(v) > 3K' \text{ and } \varphi(v) \le \varphi(u_*)\} \notag \\
+                                               &\le \Pr\{\exists u \in S, \, v \in (T, S)_{u \downarrow} \colon s(v) > 3K' \text{ and } \varphi(v) \le \varphi(u)\} \notag \\
+                                             &\le \sum_{u \in V(S)} \Pr\{\exists v \in (T, S)_{u \downarrow} \colon s(v) > 3K' \text{ and } \varphi(v) \le \varphi(u)\} ,
+  \end{align}
+  By the arguments of \cite[Page 9, Equation (9)]{finding-adam}, we have
+  \begin{align}
+    \Pr\{\exists v \in (T, S)_{u \downarrow} \colon s(v) > 3K' \text{ and } \varphi(v) \le \varphi(u)\} \notag \\
+    \qquad \le 2 \sum_{v \in (T, S)_{u \downarrow} \colon s(v) \in (K', 3K']} \Pr\{\varphi(v) \le \varphi(u)\} . \eqlabel{union-bound}
+  \end{align}
+  Observe now that for $v = (u, j_1, \dots, j_\ell)$,
+  \[
+    \varphi(v) \le \varphi(u) \iff \prod_{i = 1}^{\ell} |(T, S)_{(u, j_1, \dots, j_i) \downarrow}| \ge \prod_{i = 1}^{\ell} (n - |(T, S)_{(u, j_1, \dots, j_i) \downarrow}|) .
+  \]
+  Observe that
+  \begin{equation}
+    \frac{|(T, S)_{(u, j_1, \dots, j_i) \downarrow}|}{n} \overset{d}{\to} B \prod_{m = 1}^i U_{j_m, m} , \eqlabel{conv-dist-sub}
+  \end{equation}
+  as $n \to \infty$, where each $U_{j_m, m}$ is an independent product
+  of $j_m$ independent standard uniform random variables, and
+  $B \sim \Beta(1, k - 1)$. So, after dividing through by $n$,
+  \begin{align}
+    &\Pr\{\varphi(v) \le \varphi(u)\} \eqlabel{failure-prob-v-r} \\
+ &\qquad \le \Pr\left\{ \prod_{i = 1}^\ell B \prod_{m = 1}^i U_{j_m, m} \ge \prod_{i = 1}^\ell \left(1 - B \prod_{m = 1}^i U_{j_m, m} \right) \right\}  \notag \\
+                                     &\qquad = \Pr\left\{ \prod_{i = 1}^\ell \prod_{m = 1}^i U_{j_m, m} \ge \prod_{i = 1}^\ell \left(\frac{1}{B} - \prod_{i = 1}^i U_{j_m, m} \right) \right\} \notag \\
+                                     &\qquad \le \Pr\left\{ \prod_{i = 1}^\ell \prod_{m = 1}^i U_{j_m, m} \ge t \right\} +
+ \Pr\left\{ \prod_{i = 1}^\ell \left(\frac{1}{B} - \prod_{m = 1}^i U_{j_m, m} \right) \le t \right\} , \eqlabel{lhs-rhs}
+  \end{align}
+  where $t > 0$ is to be specified later. The first inequality above
+  follows by the portmanteau lemma and the convergence in distribution
+  noted in \eqref{conv-dist-sub}.
+
+  In \cite[Lemma 1]{finding-adam}, it is shown that
+  \[
+    \Pr\left\{ \prod_{i = 1}^\ell \prod_{m = 1}^i U_{j_m, m} \ge t \right\} \le \exp\left\{ - \sqrt{s/2} \log \left( \frac{s}{e \log (1/t) } \right) \right\} .
+  \]
+  On the other hand, observing that
+  $1 - e^{-x} \ge (1/2) \min\{x, 1\}$ for all $x \ge 0$, we have
+  \begin{align}
+    &\Pr\left\{ \prod_{i = 1}^\ell \left(\frac{1}{B} - \prod_{m = 1}^i U_{j_m, m} \right) \le t \right\} \notag \\
+    &\qquad \le \Pr\left\{ \prod_{i = 1}^\ell \left(\frac{1}{B} - 1 + \frac{1}{2} \min\left\{ \sum_{m = 1}^i \log(1/U_{j_m, m}), 1 \right\} \right) \le t \right\} \notag \\
+        &\qquad \le \Pr\left\{ \prod_{i = 1}^\ell \left(\frac{1}{B} - 1 + \frac{1}{2} \min\left\{ \sum_{m = 1}^i E_m, 1 \right\}\right) \le t \right\} , \eqlabel{rhs-2}
+  \end{align}
+  where $E_1, E_2, \dots$ are independent standard exponential random
+  variables. By the inequality of arithmetic and geometric means,
+  \begin{align}
+    \eqref{rhs-2} &\le \Pr\left\{ 2^{\ell/2} \left(\frac{1}{B} - 1\right)^{\ell/2} \left(\prod_{i = 1}^\ell \min\left\{ \sum_{m = 1}^i E_m, 1 \right\} \right)^{1/2} \le t \right\} \notag \\
+        &\le \Pr\left\{ 2^\ell \left(\frac{1}{B} - 1\right)^\ell X \le t^2\right\} , \eqlabel{rhs-3}
+  \end{align}
+  where $X$ is defined by
+  \[
+    X = \prod_{i = 1}^\infty \min\left\{ \sum_{m = 1}^i E_m, 1 \right\} .
+  \]
+  Then, for $q > 1$ to be specified,
+  \[
+    \eqref{rhs-3} \le \Pr\left\{\frac{B}{1 - B} \ge \frac{2}{q^{1/\ell}} \right\} + \Pr\left\{X \le \frac{t^2}{q}\right\} .
+  \]
+  By \cite[Lemma 2]{finding-adam}, we know that
+  \begin{equation}
+    \Pr\left\{X \le \frac{t^2}{q}\right\} \le \frac{6 t^{1/2}}{q^{1/4}} , \eqlabel{x-tail}
+  \end{equation}
+  and it is also known that
+  \begin{equation}
+    \Pr\left\{ \frac{B}{1 - B} \ge \frac{2}{q^{1/\ell}} \right\} = \frac{1}{(1 + 2/q^{1/\ell})^{k - 1}} \le \exp\left\{- \frac{k - 1}{q^{1/\ell}}\right\} , \eqlabel{b-tail}
+  \end{equation}
+  where the inequality follows since $q > 1$, where here we have used
+  that $\frac{1}{1 + x} \le e^{-x/2}$ for $0 \le x \le 2$.  Optimizing
+  a choice of $q$ in \eqref{x-tail} against \eqref{b-tail}, one can
+  see that when $t > (1/36) e^{-2 (k - 1)}$,
+  \begin{align*}
+    \eqref{rhs-3} &\le 12 t^{1/2} \left( \frac{\log(1/6t^{1/2}) + (\ell/4) \log \left( \frac{k - 1}{\log (1/6t^{1/2})} \right)}{k - 1} \right)^{\ell/4} \\
+                &\le 12 t^{1/2} \left( \frac{\log(1/6t^{1/2}) + (\sqrt{2s}/4) \log \left( \frac{k - 1}{\log (1/6t^{1/2})} \right) }{k - 1} \right)^{\sqrt{2s}/4} ,
+  \end{align*}
+  where we used the fact that
+  \[
+    s = \sum_{i = 1}^\ell (\ell - i + 1) j_i \ge \ell^2/2 .
+  \]
+  
+  It remains to make an optimal of choice of $t$. If we pick $t$ such
+  that
+  \[
+    \log (1/6t^{1/2}) = s^{0.6} - (\sqrt{2s}/4) \log (k - 1) ,
+  \]
+  it can be shown that if $s > 10^{12}$, $t < 1/6^6$, and
+  $\log(1/6t^{1/2}) > s^{0.6}/2$, then
+  \[
+    \eqref{failure-prob-v-r} \le 2 \exp\left\{ - \sqrt{s/2} \log \left( (1/25) s^{0.3} \log (k - 1) \right) \right\} . %\eqlabel{failure-prob-bootstrap}
+  \]
+
+  Recall the union bound \eqref{union-bound},
+  \[
+    \Pr\{u_* \not\in H_{\varphi; K}(T^\circ)\} \le 2 \sum_{u \in V(S)} \left( \sum_{v \in (T, S)_{u \downarrow} \colon s(v) \in (K', 3K']} \Pr\{\varphi(v) \le \varphi(u)\} \right) .
+  \]
+  We know that for any $u \in V(S)$,
+  \[
+    |\{v \in (T, S)_{u \downarrow} \colon s(v) \in (K', 3K']\}| \le 3K'
+    \exp\{ \pi \sqrt{2 K'} \} ,
+  \]
+  (see \cite[Page 8, Equation (6)]{finding-adam}) and by the
+  conditions imposed on $s$ and $k$,
+  \[
+    6 k K' \exp \{\pi \sqrt{2 K'} \} \le 6 \exp\{ 11 \sqrt{K'} \} ,
+  \]
+  and therefore,
+  \begin{align*}
+    \Pr\{u_* \not\in H_{\varphi; K}(T^\circ)\} &\le 6 \exp\left\{ 11 \sqrt{K'} - \sqrt{K'/2} \log \left((1/25) K'^{0.3} \log (k - 1)\right) \right\} \\
+                                               &\le 6 \exp\left\{ - (1/2) \sqrt{K'} \log \left((1/25) K'^{0.3} \log (k - 1) \right) \right\}
+  \end{align*}
+  for $K' > 10^{77}$, which holds for $k > 10^{10^8}$. In order to
+  make this probability at most $\eps$, we can pick for some universal
+  constant $c_1 > 0$,
+  \[
+    \sqrt{K'} = c_1  \frac{\log (1/\eps)}{\log \log (1/\eps) + \log \log k} .
+  \]
+  In order to satisfy the condition that
+  $\log(1/6t^{1/2}) > s^{0.6}/2$, this requires that for some constant
+  $c_2 > 0$,
+  \[
+    \eps < \exp \left\{ -c_2 (\log k)^{11} \right\} .
+  \]
+  In this case, there are universal constants $c_3, c_4 > 0$ such that
+  \begin{align*}
+    K &= |\{v \in (T, S)_{u_* \downarrow} \colon s(v) \le 3K'\} \\
+      &\le c_3 \exp\left\{ c_4  \frac{\log (1/\eps)}{\log \log (1/\eps) + \log \log k} \right \} . \qedhere
+  \end{align*}
+\end{proof}

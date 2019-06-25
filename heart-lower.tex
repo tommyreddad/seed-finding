@@ -1,0 +1,61 @@
+To obtain a lower bound on $K^*(k, \ell, \eps)$, one can use the
+likelihood of an observation under $\UA(n, S)$, computed in
+\secref{mle}, and as in \cite[Theorem 4]{finding-adam}, one can then
+construct a family of probable trees whose maximum likelihood estimate
+for $K$-sized sets to intersect the seed will avoid every node of the
+seed---the right choice for $K$ so that such a tree appears with
+probability at least $\eps$ would then give a lower bound on
+$K^*(k, \ell, \eps)$. Instead of this lengthy retelling, we use
+\lemref{conditional-indep} to show how any lower bound on $K(\eps)$
+also offers a lower bound on $K^*(k, \ell, \eps)$.
+
+Define $H^*_{K, k}(T^\circ)$ to be the maximum likelihood estimate for
+the set of size $K$ most likely to contain at least one node of the
+true seed of $T \sim \UA(n, S)$, given $|S| = k$ and $|L(S)| = \ell$:
+\[
+  H^*_{K, k, \ell}(T^\circ) = \argmax_{H^* \in V(T)^{(K)}} \sum_{S' \in
+    \sS_{k, \ell}(T) \colon |V(S') \cap H^*| \ge 1} \sL_{T^\circ}(S') .
+\]
+In order to prove that $K^*(k, \ell, \eps) \ge K$ for some particular
+$K$, it suffices to show that for some specific $n$, and for all $S$
+with $|S| = k$ and $|L(S)| = \ell$,
+\[
+  \Pr_{T \sim \UA(n, S)}\{V(S) \cap H_{K, k, \ell}^*(T^\circ) = \emptyset\}
+  \ge \eps .
+\]
+
+\begin{proof}[Proof of \thmref{heart-lower}]
+  Let $m = k^2 K$. For brevity, let $M_u = |(T, S)_{u \downarrow}|$,
+  and let $M_* = \min_{u \in S} M_u$. By \lemref{sukhatme},
+  \[
+    \frac{M_*}{n} \overset{d}{\to} \frac{\Beta(1, k - 1)}{k}
+  \]
+  as $n \to \infty$. Then,
+  \begin{align*}
+    \Pr_{T \sim \UA(m, S)} \{M_*/m > 1/k^2\} &\ge \liminf_{n \to \infty} \Pr_{T \sim \UA(n, S)} \{M_*/n > 1/k^2\} \\
+                                             &\ge \Pr\{\Beta(1, k - 1) > 1/k\} \\
+                                             &= (1 - 1/k)^{k - 1} \\
+                                             &\ge e^{-1} .
+  \end{align*}
+  Let
+  \[
+    \sM = \left\{(m_u \colon u \in S) \colon m_u \in \N, \, \sum_{u \in S} m_u = m, \, \min_{u \in S} m_u > \frac{m}{k^2} \right\} .
+  \]
+  Upon conditioning,
+  \begin{align*}
+    &\Pr_{T \sim \UA(m, S)} \{V(S) \cap H_{K, k, \ell}^*(T^\circ) = \emptyset\} \\
+    &\qquad \ge \Pr\{M_*/m > 1/k^2\} \\
+    &\qquad \hphantom{\ge} \sum_{(m_u \colon u \in S) \in \sM} \Pr\left\{\bigcap_{u \in S} [u \not\in H_{K, k, \ell}^*(T^\circ) \cap (T, S)_{u \downarrow}] \; \middle| \; \bigcap_{u \in S} [M_u = m_u]\right\} \\
+    &\qquad \ge e^{-1} \sum_{(m_u \colon u \in S) \in \sM} \left(\prod_{u \in S} \Pr\Bigl\{u \not\in H_{K, k, \ell}^*((T, S)_{u \downarrow}^\circ) \mathrel{\Big|} M_u = m_u \Bigr\} \right) \\
+    &\qquad \ge e^{-1} \Bigl(\Pr_{T \sim \UA(K + 1)} \{u_1 \not\in H_{K, 1}^*(T^\circ)\}\Bigr)^k ,
+  \end{align*}
+  where this last line follows from the optimality of
+  $H^*_{K, 1}((T, S)_{u \downarrow}^\circ)$ as a root estimator in
+  $(T, S)_{u \downarrow}^\circ$, and since conditionally upon
+  $M_u = m_u$, $(T, S)_{u \downarrow}$ is distributed as $\UA(m_u)$ by
+  \lemref{conditional-indep}. By definition, if
+  $K < K((e \eps)^{1/k})$, then the probability that
+  $H^*_{K, k, \ell}(T^\circ)$ avoids $V(S)$ exceeds $\eps$.
+\end{proof}
+
+\corref{heart-lower} follows immediately.

@@ -1,0 +1,45 @@
+By \eqref{whole-harder-than-heart}, we have the same lower bound on
+$K(k, \ell, \eps)$ as in \thmref{heart-lower}, \ie
+\begin{cor}\corlabel{whole-lower-small-eps}
+  There are universal constants $c_1, c_2, c_3 > 0$, and such that if
+  $\eps \le e^{- c_1 k}$, then
+  \[
+    K(k, \ell, \eps) \ge c_2 \exp\left\{ c_3 \sqrt{\frac{\log
+        (1/\eps)}{k}}\right\} .
+  \]
+\end{cor}
+
+Unlike the case for $K^*(k, \ell, \eps)$, we do not know that
+$K(k, \ell, \eps)$ is at most linear in $k$ when $\eps > e^{-c k}$;
+our best upper bound from \thmref{whole-upper} says that
+$K(k, \ell, \eps)$ is at most exponential in $k$, while the lower
+bound from \corref{whole-lower-small-eps} does not apply. We thus
+search for a lower bound on $K(k, \ell, \eps)$ which applies in the
+regime when $\eps$ is large.
+
+As in \secref{heart-lower}, define $H_{K, k, \ell}(T^\circ)$ to be the
+set of size $K$ most likely to contain all the nodes of the true seed
+of $T \sim \UA(n, S)$, given $|S| = k$ and $|L(S)| = \ell$:
+\[
+  H_{K, k, \ell}(T^\circ) = \argmax_{H \in V(T)^{(K)}} \sum_{S' \in \sS_{k, \ell}(T) \colon V(S') \subseteq H} \sL_{T^\circ}(S') .
+\]
+
+If $\eps$ is at least some positive constant, then
+$K(k, \ell, \eps) \le c k \ell$ for some constant $c > 0$ by
+\thmref{whole-upper}. We noted in \secref{familiar}, as a result of
+\lemref{leaf-existence}, that if $H_{\psi; K}$ were the optimal
+strategy for picking $K$ nodes to include the whole seed with
+probability at least $1 - \eps$, then $k \ell/(4 \eps)$ is roughly a
+lower bound on the size of such a vertex confidence set. We know that
+$H_{\psi; K}$ is not in fact the optimal strategy, but one can
+understand it to be a relaxation of the optimal strategy
+$H_{K, k, \ell}$. We thus make the following conjecture, which
+expresses our belief that $H_{\psi; K}$ is ``close enough'' to
+$H_{K, k, \ell}$ when $\eps$ is large.
+\begin{conj}\conjlabel{whole-lower-large-eps-conj}
+  There are universal constants $c_1, c_2 , \eps_0 > 0$ such that if
+  $k, \ell > c_1$, then,
+  \[
+    K(k, \ell, \eps_0) \ge c_2 k \ell .
+  \]
+\end{conj}

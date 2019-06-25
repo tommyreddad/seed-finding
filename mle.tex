@@ -1,0 +1,59 @@
+Given an unlabelled tree $T$, and a candidate seed $S$, define the
+likelihood function $\sL_{T}(S)$ to be the probability of observing
+$T$ under $\UA(n, S)^\circ$, \ie
+\[
+  \sL_{T}(S) = \Pr_{T' \sim \UA(n, S)}\{T'^\circ = T\} ,
+\]
+and if $\sS_{k, \ell}(T)$ denotes the set of all possible seeds in $T$
+with $k$ vertices and $\ell$ leaves, the \emph{maximum likelihood
+  estimate} for $S$ is given by
+\[
+  S^* = \argmax_{S \in \sS_{k, \ell}(T)} \sL_{T}(S) .
+\]
+Note that the subtrees $(T, S)_{u \downarrow}$ for $u \in V(S)$ are,
+conditionally on their sizes, independent random recursive trees:
+\begin{lem}\lemlabel{conditional-indep}
+  Let $S$ be some seed, and $T \sim \UA(n, S)$, and $n_u \in \N$ for
+  $u \in S$ be such that $\sum_{u \in S} n_u = n$. Then, conditionally
+  on $|(T, S)_{u \downarrow}| = n_u$ for all $u \in S$, the trees
+  $(T, S)_{u \downarrow}$ are independently distributed as $\UA(n_u)$.
+\end{lem}
+\begin{proof}[Proof sketch]
+  Any incoming node in the attachment process $\UA(n, S)$,
+  conditionally upon connecting to $(T, S)_{u \downarrow}$ for some
+  $u \in S$, will connect to a uniformly random node of
+  $(T, S)_{u \downarrow}$. Conditioning on the event that
+  $|(T, S)_{u \downarrow}| = n_u$, this precisely describes the
+  uniform attachment tree $\UA(n_u)$.
+\end{proof}
+
+As a consequence,
+\begin{equation}
+  \sL_T(S) = \prod_{u \in V(S)} \sL_{(T, S)_{u \downarrow}}(u) , \eqlabel{mle}
+\end{equation}
+where $\sL_{(T, S)_{u \downarrow}}(u)$ is the likelihood of the tree
+$(T, S)_{u \downarrow}$ to be rooted at $u$, which is computed in
+\cite[Section 3]{finding-adam}. Specifically, as in
+\cite{finding-adam}, let $T$ be a rooted tree and $v$ a vertex of $T$,
+and $T_1, \dots, T_k$ be the subtrees rooted at the children of $v$
+listed in an arbitrary order, and $S_1, \dots S_L$ be the isomorphism
+classes realized by these subtrees, define
+\[
+  \Aut(v, T) = \prod_{i = 1}^L \bigl|\bigl\{j \in \{1, \dots, k\} \colon T_j^\circ = S_i\bigr\}\bigr| ! .
+\]
+Define also, for an unrooted unlabelled tree $T$,
+\[
+  \overline{\Aut}(u, T) = |\{v \in V(T) \colon (T, v)^\circ = (T, u)^\circ\} | ,
+\]
+\ie $\overline{\Aut}(u, T)$ is the number of vertices $v \in V(T)$
+such that the rooted trees $(T, v)$ and $(T, u)$ are isomorphic. Then,
+\[
+  \sL_T(u) = \frac{|T|}{\overline{\Aut}(u, T)} \prod_{v \in V(T)} \frac{1}{|(T, u)_{v \downarrow}| \Aut(v, (T, u))} ,
+\]
+so
+\begin{equation}
+  \sL_T(S) = \prod_{u \in S} \frac{|(T, S)_{u \downarrow}|}{\overline{\Aut}(u, (T, S)_{u \downarrow})} \prod_{v \in (T, S)_{u \downarrow}} \frac{1}{|(T, S)_{v \downarrow}| \Aut(v, (T, S)_{u \downarrow})} . \eqlabel{likelihood}
+\end{equation}
+In particular, this implies that the maximum likelihood estimate $S^*$
+can be computed in polynomial time in $n$ for any fixed $k, \ell$,
+just as in the case when $k = 1$~\cite{finding-adam}.

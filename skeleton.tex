@@ -1,0 +1,463 @@
+
+For a seed $S$, write $R(S) = S - L(S)$ for the \emph{skeleton} of
+$S$, or simply $R$ when $S$ is understood. For an integer $i \ge 1$,
+let $\sT_i$ denote the set of trees in which a set of $i$ labelled
+vertices form a connected subgraph, and in which all other vertices
+are unlabelled. For a given labelled tree $T$ and a set
+$A \in V(T)^{(i)}$, let $T^{(A)} \in \sT_i$ be the tree in which all
+labels are forgotten except for those of $A$. Consider now the optimal
+size
+\[
+  K'(k, \ell, \eps) = \min\left\{ m \colon 
+    \begin{array}{l} \displaystyle
+      \exists H'_{m, k, \ell, \eps}
+  \colon \sT_{k - \ell} \to V(\sT_{k - \ell})^{(m)} , \text{ such that} \\ \displaystyle
+      \min\limits_{\substack{S \colon |S| = k \\ |L(S)| = \ell}} \Pr_{T
+    \sim \UA(n, S)} \{L(S) \subseteq H'_{m, k, \ell, \eps}(T^{(R)})\}
+  \ge 1 - \eps
+      \end{array}
+      \right\} .
+\]
+be the optimal size of a set which, given the position of the skeleton
+of the seed, the size of the seed, and its number of leaves, will
+locate all of its true leaves with probability at least $1 - \eps$.
+
+As in \secref{heart} and \secref{whole}, we find an upper bound on
+$K'(k, \ell, \eps)$ by exhibiting an algorithm which, given $k, \eps$
+and $R$, returns a set of vertices which contains all of $L(S)$ with
+probability at least $1 - \eps$.
+
+Let $\psi(u) = |(T, R)_{u \downarrow}|$, and let
+$H'_{\psi; K}(T^{(R)})$ be the set of $K$ vertices $u \in N(R)$
+maximizing their value of $\psi$. This estimator for $L(S)$ is
+slightly different than those for $V(S)$ seen in \secref{heart} and
+\secref{whole}. Indeed, allowing ourselves to assume $R$ significantly
+improves our chances at correctly guessing the rest of
+$S$. Specifically, if $k$ is constant, the dependence of
+$K'(k, \ell, \eps)$ upon $1/\eps$ is shown to be logarithmic, while
+the result of \thmref{heart-lower} has that, for sufficiently small
+$\eps$, $K^*(k, \ell, \eps)$ is superpolylogarithmic in $1/\eps$.
+
+\begin{prop}\proplabel{given-skeleton-lem}
+  If
+  \[
+    K \ge \ell + 2 (k - \ell) \log \left( (3 \ell/\eps) \log
+      \left( \frac{3 (k - \ell)}{\eps}\right)\right) + (7/6)
+    \log \left( \frac{3 (k - \ell)}{\eps} \right)
+  \]
+  then $\Pr\{L(S) \subseteq H'_{\psi; K}(T^{(R)})\} \ge 1 - \eps$.
+\end{prop}
+\begin{proof}
+  Let $v_1, v_2, \dots$ be the chronological sequence of nodes
+  attaching to $R$, where $\{v_1, v_2, \dots, v_\ell\} = L(S)$ ordered
+  arbitrarily. Write $\psi_* = \min_{u \in L(S)} \psi(u)$. If for all
+  $i > K$, $\psi(v_i) < \psi_*$, then
+  $L(S) \subseteq H'_{\psi; K}(T^{(R)})$. So
+  \begin{equation}
+    \Pr\{L(S) \not\subseteq H'_{\psi; K}(T^{(R)})\} \le \Pr\{\psi_* \le t n\} + \Pr\{ \exists i > K \colon \psi(v_i) \ge t n\} \eqlabel{phi-tail-skeleton}
+  \end{equation}
+  for $t > 0$ to be specified. Observe that $\psi_*/n$ converges in
+  distribution to $\Beta(1, k - 1)/\ell$ as $n \to \infty$, so
+  \begin{align*}
+    \Pr\{\psi_* \le tn\} &\le \Pr\{\Beta(1, k - 1) \le t \ell \} \\
+                         &\le t \ell (k - 1) \\
+                         &\le \eps/3
+  \end{align*}
+  if we choose $t = \eps/(3 \ell (k - 1))$ .
+
+  It remains to handle the second term in
+  \eqref{phi-tail-skeleton}. Let $N$ be the (random) time at which
+  $v_{K}$ is inserted, \ie $v_{K} = u_N$. Let $T_u$ be the component
+  of $T$ containing $u$ after the removal of all edges between
+  $\{u_1, \dots, u_N\}$. Any node $v_i$ with $i > K$ is part of $T_u$
+  for some $u \in R$. Since for any $u \in R$, $|T_u|/n$ converges in
+  distribution to $\Beta(1, N - 1)$ as $n \to \infty$,
+  \begin{align}
+    &\Pr\{\exists i > K \colon \psi(v_i) \ge tn\} \notag \\
+    &\qquad \le \Pr\{\exists u \in R \colon |T_u| \ge n t\} \notag \\
+                                                  &\qquad \le (k - \ell) \Pr\{ \Beta(1, N - 1) \ge t \} \notag \\
+                                                  &\qquad \le (k - \ell) \Pr\{\Beta(1, N - 1) \ge t \mid N \ge s\} + (k - \ell)\Pr\{N \le s\} , \eqlabel{skeleton-2}
+  \end{align}
+  where $s > 0$ is to be specified. Conditionally upon $N \ge s$,
+  $\Beta(1, s - 1)$ stochastically dominates $\Beta(1, N - 1)$ by
+  \lemref{beta-dom-2}, so
+  \begin{align*}
+    (k - \ell) \Pr\{\Beta(1, N - 1) \ge t \mid N \ge s\} &\le (k - \ell) \Pr\{\Beta(1, s - 1) \ge t\} \\
+    &= (k - \ell) (1 - t)^{s - 1} \\
+    &\le (k - \ell) e^{- t (s - 1)} , 
+  \end{align*}
+  which is less than $\eps/3$ if we choose
+  \[
+    s = 1 + (1/t) \log \left(\frac{3 (k - \ell)}{\eps}\right) = 1 + \frac{3 \ell (k -
+      1)}{\eps} \log \left(\frac{3 (k - \ell)}{\eps}\right) .
+  \]
+  
+  For the second term in \eqref{skeleton-2}, observe that
+  \[
+    \Pr_{T \sim \UA(n, S)} \{N \le s\} \le \Pr_{T \sim \UA(s, S)}\{\deg(R) \ge K \} ,
+  \]
+  where
+  \[
+    \deg(R) = \ell + \sum_{i = k + 1}^s \mathbf{1}\{u_i \text{ connects to $R$} \} 
+  \]
+  and each such indicator is independent. Clearly, for any
+  $i \ge k + 1$,
+  \[
+    \mathbf{1}\{u_i \text{ connects to $R$}\} \sim \Ber\left( \frac{k -
+        \ell}{i - 1} \right) ,
+  \]
+  so writing $H_m = \sum_{i = 1}^m 1/i$ for the $m$-th Harmonic
+  number,
+  \[
+    \E\{\deg(R)\} = \ell + (k - \ell)(H_{s - 1} - H_{k - 1}) .
+  \]
+  Picking
+  \[
+    K \ge \ell + (k - \ell) (H_{s - 1} - H_{k - 1}) + \delta
+  \]
+  for $\delta > 0$ to be specified, we have by Bernstein's
+  inequality~\cite{bernstein, gabor-concentration},
+  \begin{align*}
+    &\Pr\{\deg(R) \ge K\} \\
+    &\qquad \le \Pr \left\{ \left[ \sum_{i = k + 1}^s \Ber\left(\frac{k - \ell}{i - 1}\right) \right] - (k - \ell)(H_{s - 1} - H_{k - 1}) \ge \delta \right\} \\
+    &\qquad \le \exp \left\{ - \frac{\delta^2}{2 (k - \ell) (H_{s - 1} - H_{k - 1}) + 2 \delta/3} \right\} \\
+    &\qquad \le \exp \left\{ - \frac{\delta^2}{2 (k - \ell) \log \left(\frac{s - 1}{k}\right) + 2 \delta/3} \right\} .
+  \end{align*}
+  Some arithmetic shows that picking
+  \[
+    \delta = (2/3) \log \left( \frac{3 (k - \ell)}{\eps} \right) + \sqrt{2 (k - \ell) \log \left(\frac{s - 1}{k}\right) \log \left(\frac{3(k - \ell)}{\eps}\right)}
+  \]
+  suffices to have
+  \[
+    \Pr\{\deg(R) \ge K\} \le \frac{\eps}{3(k - \ell)} ,
+  \]
+  and therefore, in \eqref{skeleton-2},
+  \[
+    (k - \ell) \Pr\{N \le s\} \le \eps/3 .
+  \]
+  With our particular choice of $s$, this proves that it suffices to pick
+  \[
+    K \ge \ell + 2 (k - \ell) \log \left( (3 \ell/\eps) \log \left( \frac{3 (k - \ell)}{\eps}\right)\right) + (7/6) \log \left( \frac{3 (k - \ell)}{\eps} \right) . \qedhere
+  \]
+\end{proof}
+\thmref{skeleton-tight} follows immediately. In fact,
+\propref{given-skeleton-lem} is tight for a large class of seeds. In
+order to prove this, we use the following basic result.
+\begin{lem}\lemlabel{leaf-existence}
+  When $K \le k \ell/(4 \eps)$,
+  \[
+    \Pr_{T \sim \UA(K, S)}\{\exists u \in L(S) \colon |(T, S)_{u \downarrow}| = 1 \} \ge \eps .
+  \]
+\end{lem}
+\begin{proof}
+  Since $S$ is a tree, it has at least two leaves. Write $\sE_u$ for
+  the event that $|(T, S)_{u \downarrow}| = 1$. By
+  inclusion-exclusion, for some arbitrary distinct leaves
+  $u, v \in L(S)$,
+  \begin{align*}
+    \Pr\{\exists w \in L(S) \colon \sE_w\} \ge \ell \Pr\{\sE_u\} - \binom{\ell}{2} \Pr\{\sE_u \cap \sE_v\} .
+  \end{align*}
+  It is easy to see that
+  \[
+    \Pr\{\sE_u\} = \frac{k - 1}{k} \cdot \frac{k}{k + 1} \cdots \frac{K - 2}{K - 1} = \frac{k - 1}{K - 1} ,
+  \]
+  and
+  \[
+    \Pr\{\sE_u \cap \sE_v\} = \frac{k - 2}{k} \cdot \frac{k - 1}{k + 1} \cdots \frac{K - 3}{K - 1} = \frac{(k - 2)(k - 1)}{(K - 2)(K - 1)} \le \left( \frac{k - 1}{K - 1} \right)^2 ,
+  \]
+  so
+  \[
+    \Pr\{\exists w \in L(S) \colon \sE_w\} \ge \frac{k \ell}{4 K} . \qedhere
+  \]
+\end{proof}
+
+Once again, we rely on the maximum likelihood estimate to prove a
+lower bound. Let $H'_{K, k, \ell}(T^{(R)})$ be the maximum likelihood
+estimate for $K$-sized sets to include all leaves of a seed $S$, given
+the skeleton $R$, and given $|S| = k$ and $|L(S)| = \ell$, \ie
+\[
+  H'_{K, k, \ell}(T^{(R)}) = \argmax_{H \in N(R)^{(K)}} \sum_{L' \subseteq H \colon |L'| = \ell}
+  \sL_{T^{(R)}}(L') ,
+\]
+where $\sL_{T^{(R)}}(L')$ represents the likelihood of observing the
+tree $T^{(R)}$ if it were drawn from $\UA(n, R \cup L')^{(R)}$.
+\begin{prop}\proplabel{skeleton-tight}
+  Let $\ell_2 = |L(R)|$. Suppose that
+  $k - \ell - \ell_2 \ge 2 \sqrt{k}$, $\ell_2 \ge 2 \sqrt{k}$, and
+  \[
+    \eps \le \frac{\ell}{128 e^5 \ell_2^4} .
+  \]
+  Then, there is a universal constant $c > 0$ such that if
+  \[
+    K \le  c (k - \ell - \ell_2) \log (\ell_2 \ell/\eps) ,
+  \]
+  then
+  \[
+    \Pr_{T \sim \UA(n, S)}\{L(S) \subseteq H'_{K, k, \ell}(T^{(R)})\}
+    < 1 - \eps .
+  \]
+\end{prop}
+\begin{proof}
+  Let $\sE_u$ be the event that $|(T, S)_{u \downarrow}| = 1$. By
+  \lemref{leaf-existence}, when $n = k \ell/(64\eps)$,
+  \[
+    \Pr_{T \sim \UA(n, S)}\{ \exists u \in L(S) \colon \sE_u\} \ge 16 \eps .
+  \]
+  Let
+  \[
+    X = |\{v \in N(R - L(R)) - S \colon |(T, S)_{u \downarrow}| \ge 2\}| .
+  \]
+  For $u \in L(R)$, let $\sF_u$ be the event that $|N(u) - S| \ge 1$,
+  and let $\sF = \cap_{u \in L(R)} \sF_u$. Then,
+  \begin{align*}
+    &\Pr\{L(S) \not\subseteq H'_{K, k, \ell}(T^{(R)})\} \\
+    &\qquad \ge 16 \eps \Pr\bigl\{L(S) \not\subseteq H_{K, k, \ell}(T^{(R)}) \mathrel{\bigm|} \exists u \in L(S) \colon \sE_u\bigr\} \\
+    &\qquad \ge 16 \eps \Pr\bigl\{[X \ge K] \cap \sF \mathrel{\bigm|} \exists u \in L(S) \colon \sE_u\bigr\} \\
+    &\qquad \ge 16 \eps \Pr\bigl\{[X \ge K] \cap \sF \bigr\} ,
+  \end{align*}
+  where the second inequality follows since the $X$ vertices $u$ of
+  $N(R - L(R)) - S$ with $|(T, S)_{u \downarrow}| \ge 2$ are more
+  likely than at least one vertex of $L(S)$ with
+  $|(T, S)_{u \downarrow}| = 1$ of being chosen in
+  $H'_{K, k, \ell}(T^{(R)})$ when $\sF$ holds, and the third
+  inequality follows since conditioning on the seed's leaves to be
+  naked can only increase the likelihood of connections to skeleton
+  nodes. It suffices to prove that $\Pr\{[X \ge K] \cap \sF\} \ge 1/16$.
+
+  Let
+  \[
+    T_R = \bigcup_{u \in R - L(R)} (T, S)_{u \downarrow}, \quad T_L = \bigcup_{u \in L(R)} (T, S)_{u \downarrow} ,
+  \]
+  with sizes $|T_R| = M_R$ and $|T_L| = M_L$.  Observe that,
+  conditionally upon the sizes $M_R$ and $M_L$, the events $X \ge K$
+  and $\sF$ are independent. Furthermore,
+  \[
+    \frac{M_R}{n} \overset{d}{\to} B_R \sim \Beta(k - \ell - \ell_2, \ell + \ell_2), \quad \frac{M_L}{n} \overset{d}{\to} B_L \sim \Beta(\ell_2, k - \ell_2) ,
+  \]
+  as $n \to \infty$, where we note that $B_R$ and $B_L$ are not
+  necessarily independent. Let $\sM \subseteq \N^2$ be such that for
+  all $(m_R, m_L) \in \sM$,
+  \[    
+    \left|\frac{m_R}{n} - \frac{k - \ell - \ell_2}{k}\right| <
+    \frac{1}{\sqrt{k}} \quad \text{ and } \quad \left|\frac{m_L}{n} - \frac{\ell_2}{k}\right| <
+    \frac{1}{\sqrt{k}} .
+  \]
+  Write $M = (M_R, M_L)$ for brevity. By \lemref{beta-conc},
+  \begin{align*}
+    \Pr\{M \in \sM\} &= \Pr\left\{\left|\frac{M_R}{n} - \frac{k - \ell - \ell_2}{k}\right| < \frac{1}{\sqrt{k}} , \,  \left|\frac{M_L}{n} - \frac{\ell_2}{k}\right| < \frac{1}{\sqrt{k}}\right\} \\
+    &\ge \Pr\left\{\left| B_R - \frac{k - \ell - \ell_2}{k}\right| < \frac{1}{\sqrt{k}} , \, \left|B_L - \frac{\ell_2}{k}\right| < \frac{1}{\sqrt{k}}\right\} \\
+    &\ge 1 - \Pr\left\{\left|B_R - \frac{k - \ell - \ell_2}{k}\right| \ge \frac{1}{\sqrt{k}}\right\} - \Pr\left\{\left|B_L - \frac{\ell_2}{k}\right| \ge \frac{1}{\sqrt{k}}\right\} \\
+    &\ge 1/2 .
+  \end{align*}
+  Therefore,
+  \begin{align*}
+    &\Pr\{[X \ge K] \cap \sF\} \\
+    &\qquad \ge \sum_{m \in \sM} \Pr\bigl\{[X \ge K] \cap \sF \mathrel{\bigm|} M = m\bigr\} \Pr\{M = m\} \\
+    &\qquad = \sum_{m \in \sM} \Pr\bigl\{X \ge K \mathrel{\bigm|} M = m\bigr\} \Pr\bigl\{\sF \mathrel{\bigm|} M = m\bigr\} \Pr\{M = m\} \\
+    &\qquad = \sum_{m \in \sM} \Pr_{T \sim \UA(n, S)}\{M = m\} \\
+    &\qquad \qquad \Pr_{T \sim \UA(m_R, R - L(R))}\{\deg(R - L(R)) \ge K\} \\
+    &\qquad \qquad \Pr_{T \sim \UA(m_L, L(R))}\{\forall u \in L(R), \, \deg(u) \ge 1\} \\
+    &\qquad \ge (1/2) \Pr_{T \sim \UA(n(k - \ell - \ell_2 - \sqrt{k})/k, R - L(R))}\{\deg(R - L(R)) \ge K\} \\
+    &\qquad \qquad \Pr_{T \sim \UA(n(\ell_2 - \sqrt{k})/k, L(R))}\{\forall u \in L(R), \, \deg(u) \ge 1\} .
+  \end{align*}
+  Let $v_1, \dots, v_{n(k - \ell - \ell_2 - \sqrt{k})/k}$ be the sequence of
+  nodes connecting to $R - L(R)$ in the uniform attachment process
+  implied by the first probability above. Let
+  \[
+    X_i = \mathbf{1}\{v_i \text{ connects to } R \text{ and } v_j \text{ connects to } u_i \text{ for some } j > i\} .
+  \]
+  Then,
+  \[
+    \deg(R - L(R)) = \sum_{i = k - \ell - \ell_2 + 1}^{n(k - \ell - \ell_2 - \sqrt{k})/k} X_i ,
+  \]
+  where
+  $\{X_i \colon k - \ell - \ell_2 + 1 \le i \le n (k - \ell - \ell_2 -
+  \sqrt{k})/k\}$ is a collection of independent Bernoulli random variables
+  with
+  \[
+    \E\{X_i\} = (k - \ell - \ell_2)\left(\frac{1}{i - 1} - \frac{1}{\frac{n(k - \ell - \ell_2 - \sqrt{k})}{k} - 1} \right) .
+  \]
+  Since $k - \ell - \ell_2 \ge 2\sqrt{k}$ by assumption, we can see
+  that
+  \[
+    \E\{\deg(R - L(R))\} \ge (k - \ell - \ell_2) \log \left(\frac{n}{2 e^2 k}\right) .
+  \]
+  Since each $X_i$ is independent, then
+  \begin{align*}
+    \V\{\deg(R - L(R))\} &= \sum_{i = k - \ell - \ell_2 + 1}^{n(k - \ell - \ell_2 - \sqrt{k})/k} \V\{X_i\} \\
+                         &\le \sum_{i = k - \ell - \ell_2 + 1}^{n(k - \ell - \ell_2 - \sqrt{k})/k} \E\{X_i\} \\
+                         &= \E\{\deg(R - L(R))\} .
+  \end{align*}
+  Since the median of $\deg(R - L(R))$ is within a standard deviation
+  of its mean, we see that picking
+  \[
+    K \le \left(\frac{k - \ell - \ell_2}{2}\right) \log
+    \left(\frac{n}{2 e^2 k} \right)
+  \]
+  is sufficient to make
+  \[
+    \Pr_{T \sim \UA(n(k - \ell - \ell_2 - \sqrt{k})/k, R - L(R))}\{\deg(R - L(R)) \ge K\} \ge 1/2 ,
+  \]
+  as long as
+  $(k - \ell - \ell_2) \log \left(\frac{n}{2 e^2 k}\right) \ge
+  4$. Since $k - \ell - \ell_2 \ge 2 \sqrt{k} \ge 2$, this condition
+  is satisfied as long as $n \ge e^4 k$. This condition will be
+  absorbed by a further condition on $n$, and can be safely ignored.
+
+  Let $w_1, \dots, w_{n(\ell_2 - \sqrt{k})/k}$ be the chronological sequence
+  of nodes appearing in the attachment process
+  $T \sim \UA(n(\ell_2 - \sqrt{k})/k, L(R))$, and let $z_1, \dots, z_Y$ be
+  the subsequence of these nodes which connect directly to the nodes
+  of $L(R)$. Finally, let $Z$ be minimum such that the nodes
+  $z_1, \dots, z_Z$ connect to all nodes of $L(R)$. Then,
+  \[
+    \Pr_{T \sim \UA(n(\ell_2 - \sqrt{k})/k, L(R))}\{\forall u \in L(R), \, \deg(u) \ge 1\} \ge \Pr\{Z \le Y\} .
+  \]
+  Then, writing
+  \[
+    Y_i = \mathbf{1}\{w_i \text{ connects to a node of } L(R)\} ,
+  \]
+  then we see that
+  $\{Y_i \colon \ell_2 + 1 \le i \le n (\ell_2 - \sqrt{k})/k\}$ is a
+  collection of independent Bernoulli random variables such that
+  $Y_i \sim \Ber\left(\frac{\ell_2}{i - 1}\right)$ and
+  \[
+    Y = \sum_{i = \ell_2 + 1}^{n (\ell_2 - \sqrt{k})/k} Y_i .
+  \]
+  Just as before, we see that if $\ell_2 \ge 2 \sqrt{k}$, then
+  $\E\{Y\} \ge \ell_2 \log \left(\frac{n}{2 e k}\right)$, and
+  \[
+    \Pr\left\{Y \ge (\ell_2/2) \log\left(\frac{n}{2ek}\right)\right\} \ge 1/2 ,
+  \]
+  whence
+  \begin{align*}
+    \Pr\{\forall u \in L(R), \, \deg(u) \ge 1\} &\ge (1/2) \Pr\left\{Z \le Y \mathrel{\Big|} Y \ge (\ell_2/2) \log\left( \frac{n}{2ek} \right) \right\} \\
+                                                &\ge (1/2) \Pr\left\{ Z \le (\ell_2/2) \log \left( \frac{n}{2 e k} \right) \right\} .
+  \end{align*}
+  The random variable $Z$ is distributed as the time to collect all
+  coupons in the well-known \emph{coupon collector}
+  problem~\cite[Section~2.4.1]{upfal}. Specifically,
+  \[
+    Z \sim \sum_{i = 1}^{\ell_2} \Geo\left(\frac{\ell_2 - (i - 1)}{\ell_2} \right) ,
+  \]
+  where each term above is independent, and where $\Geo(p)$ denotes a
+  geometric random variable with parameter $p$, \ie the random
+  variable with probability mass function $f_p \colon \N \to \R$,
+  where
+  \[
+    f_p = p (1 - p)^{k - 1} .
+  \]
+  Then, by Markov's inequality,
+  \begin{align*}
+    \Pr\left\{Z \le (\ell_2/2) \log\left( \frac{n}{2ek} \right) \right\} &= 1 - \Pr\left\{Z > (\ell_2/2) \log\left( \frac{n}{2 e k} \right) \right\} \\
+                                                                         &\ge 1 - \frac{\ell_2 \log (e \ell_2)}{(\ell_2/2) \log \left( \frac{n}{2 e k} \right)} \\
+                                                                         &\ge 1/2
+  \end{align*}
+  as long as $n \ge 2 e^5 \ell_2^4 k$. Finally, this proves that
+  \[
+    \Pr\{[X > K] \cap \sF\} \ge 1/16 . \qedhere
+  \]
+\end{proof}
+Note that the family of complete binary trees satisfies the structural
+seed conditions of \propref{skeleton-tight}. Indeed, if $S$ is a
+complete binary tree, we have that $k = 2 \ell - 1$ and
+$\ell = 2 \ell_2 - 1$, so that
+\[
+  k - \ell - \ell_2 = k - \frac{k + 1}{2} - \frac{k + 3}{4} = \frac{k - 5}{4} \ge 2 \sqrt{k} ,
+\]
+and
+\[
+  \ell_2 = \frac{k + 3}{4} \ge 2 \sqrt{k} ,
+\]
+for all $k \ge 74$.
+
+\section{Finding a whole star}\seclabel{whole-star}
+
+In this section, we study the number of nodes $K(S_k, \eps)$ required
+to find the seed in a seeded uniform attachment tree with probability
+at least $1 - \eps$, given that the seed is a star $S_k$ on $k$ nodes,
+and given that we know that the seed is isomorphic to $S_k$. By
+\eqref{whole-harder-than-given} and \thmref{whole-upper},
+\[
+  K(S_k, \eps) \le c k^2 (1/\eps)^{1 + 2/k} \log(1/\eps) .
+\]
+The extra knowledge of the full structure of $S_k$ allows us to shave
+off an extra factor of $k/\eps$.
+
+Let $u_1$ denote the center of the star. To identify the whole star,
+we first locate $u_1$ and then use \propref{given-skeleton-lem} to
+locate all remaining vertices. Recall $H^*_{\psi; m}$ from
+\secref{heart-upper}. We use the following intermediate result, whose
+proof is adapted from that of \thmref{heart-upper}.
+\begin{lem}\lemlabel{include-center-star}
+  There are universal constants $c, \eps_0 > 0$ such that if
+  $\eps \le \eps_0$ and
+  \[
+    K \ge c (1/\eps)^{1/k} \log (1/\eps) ,
+  \]
+  then
+  \[
+    \Pr\{u_1 \in H^*_{\psi; K}(T^\circ)\} \ge 1 - \eps .
+  \]
+\end{lem}
+\begin{proof}
+  If for all $i > K$, $\psi(u_i) > \psi(u_1)$, then
+  $H^*_{\psi; K}(T^\circ)$ contains $u_1$. Moreover, if $T_i$ denotes
+  the component of $T$ containing $u_i$ after the removal of all edges
+  between vertices of $S_k$,
+  \begin{align*}
+    \Pr\{\psi(u_1) \ge nt\} &\le \Pr\{\exists 1 \le i \le k \colon |T_i| \ge nt\} \\
+                            &\le k \Pr\{ \Beta(1, k - 1) \ge t\} \\
+                            &= k (1 - t)^{k - 1}
+  \end{align*}
+  and this probability is at most $\eps/2$ for
+  $t = 1 - (\eps/(2k))^{1/(k - 1)}$. As before,
+  \[
+    \Pr\{\exists i > K \colon \psi(u_i) \le nt\} \le K t^{K - 1} \le K e^{-(K - 1) \left(\frac{\eps}{2k}\right)^{1/(k - 1)}},
+  \]
+  and it is not hard to see that this probability can be made at most
+  $\eps/2$ by choosing, for some constant $c > 0$,
+  \[
+    K \ge c (1/\eps)^{1/k} \log (1/\eps) . \qedhere
+  \]
+\end{proof}
+We note here a related result by Jog and
+Loh~\cite[Theorem~4]{jog-persistence}, which says that for a
+universal constant $c > 0$, if $k \ge c \log (1/\eps)$, then with
+probability at least $1 - \eps$, the node $u_1$ will be the unique
+\emph{persistent centroid} of $\UA(n, S_k)$, \ie for sufficiently
+large $n$, $u_1$ will minimize the value of $\psi$ in
+$T \sim \UA(n, S_k)$, and remain as such throughout the rest of the
+attachment process. As a consequence, we can find $u_1$ by selecting
+only one node in the unlabelled tree. To summarize, when
+$k \ge c \log (1/\eps)$,
+\[
+  \Pr\{u_1 \in H^*_{\psi; 1}(T^\circ)\} \ge 1 - \eps .
+\]
+
+Recall also $H'_{\psi; m}$ from \secref{leaves}.
+\begin{prop}\proplabel{find-all-star}
+  Let $m$ be such that
+  \[
+    \Pr_{T \sim \UA(n, S_k)}\{u_1 \in H^*_{\psi; m}(T^\circ)\} \ge 1 - \eps/2 
+  \]
+  and $m'$ be such that
+  \[
+    \Pr_{T \sim \UA(n, S_k)} \{ L(S_k) \subseteq H'_{\psi;
+      m'}(T^{(u_1)})\} \ge 1 - \eps/2 .
+  \]
+  Then $K(S_k, \eps) \le m m'$.
+\end{prop}
+\begin{proof}
+  Write $m' = K'(k, k - 1, \eps)$. Define
+  \[
+    H = \{v \colon v \in H'_{\psi; m'}(T^{(u)}) \text{ for all } u \in H^*_{\psi; m}(T^\circ)\} .
+  \]
+  Then,
+  \[
+    \Pr\{ V(S_k) \not\subseteq H \} \le \Pr\{u_1 \not\in H^*_{\psi; m}(T^\circ)\} + \Pr\{L(S_k) \not\subseteq H'_{\psi; m'}(T^{(u_1)})\} \le \eps 
+  \]
+  and clearly $|H| \le m m'$.
+\end{proof}
+\thmref{different-setting} follows from \lemref{include-center-star},
+\propref{given-skeleton-lem}, and \propref{find-all-star}.

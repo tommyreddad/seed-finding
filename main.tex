@@ -1,0 +1,283 @@
+\documentclass[letterpaper]{amsart}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{amssymb}
+
+\usepackage{microtype}
+\usepackage{verbatim}
+\usepackage{enumitem}
+
+\usepackage{mathtools}
+
+\usepackage{graphicx}
+\graphicspath{ {./figures/} }
+
+\usepackage{caption, subcaption}
+
+%%%
+% Nice typesetting for KL and Jeffreys divergence
+\DeclarePairedDelimiterX{\infdivx}[2]{(}{)}{%
+  #1\;\delimsize\|\;#2%
+}
+\newcommand{\infdiv}{\mathrm{KL}\infdivx}
+\newcommand{\sinfdiv}{\mathrm{J}\infdivx}
+%%%
+
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+
+\newcommand{\bC}{\mathbb{C}}
+\newcommand{\bZ}{\mathbb{Z}}
+\newcommand{\sC}{\mathcal{C}}
+\newcommand{\sE}{\mathcal{E}}
+\newcommand{\bX}{\mathbb{X}}
+\newcommand{\bS}{\mathbb{S}}
+\newcommand{\sP}{\mathcal{P}}
+\newcommand{\sL}{\mathcal{L}}
+\newcommand{\sW}{\mathcal{W}}
+\newcommand{\sG}{\mathcal{G}}
+\newcommand{\sT}{\mathcal{T}}
+\newcommand{\sS}{\mathcal{S}}
+\newcommand{\sI}{\mathcal{I}}
+\newcommand{\sX}{\mathcal{X}}
+\newcommand{\sF}{\mathcal{F}}
+\newcommand{\sR}{\mathcal{R}}
+\newcommand{\sD}{\mathcal{D}}
+\newcommand{\sA}{\mathcal{A}}
+\newcommand{\sM}{\mathcal{M}}
+\newcommand{\sN}{\mathcal{N}}
+\newcommand{\sH}{\mathcal{H}}
+\newcommand{\sV}{\mathcal{V}}
+\newcommand{\sB}{\mathcal{B}}
+\newcommand{\sY}{\mathcal{Y}}
+\newcommand{\voronoi}{Vorono\u\i}
+\newcommand{\ceil}[1]{{\lceil #1 \rceil}}
+\newcommand{\Ceil}[1]{{\left\lceil #1 \right\rceil}}
+\newcommand{\floor}[1]{{\lfloor #1 \rfloor}}
+\newcommand{\Floor}[1]{{\left\lfloor #1 \right\rfloor}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\Sp}{\mathbb{S}}
+\DeclareMathOperator{\E}{\mathbf{E}}
+\newcommand*{\from}{\colon}
+\newcommand{\eps}{\varepsilon}
+
+\newcommand{\SBM}{\text{SBM}}
+\let\Pr\relax
+\DeclareMathOperator{\Pr}{\mathbf{P}}
+\newcommand{\V}{\mathbf{Var}}
+\DeclareMathOperator{\TV}{TV}
+\DeclareMathOperator{\Ber}{Bernoulli}
+\DeclareMathOperator{\Poi}{Poisson}
+\DeclareMathOperator{\Bin}{Binomial}
+\DeclareMathOperator{\Dirichlet}{Dirichlet}
+\DeclareMathOperator{\Gam}{Gamma}
+\DeclareMathOperator{\Beta}{Beta}
+\DeclareMathOperator{\Exp}{Exp}
+\DeclareMathOperator{\Geo}{Geo}
+\DeclareMathOperator{\compo}{comp}
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator{\argmin}{argmin}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\cov}{cov}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\UA}{UA}
+\DeclareMathOperator{\Aut}{Aut}
+\DeclareMathOperator{\NegBin}{NB}
+\DeclareMathOperator{\diam}{diam}
+\DeclareMathOperator{\Multi}{Multinomial}
+\DeclareMathOperator{\VC}{VC}
+\DeclareMathOperator{\br}{br}
+
+\newcommand{\NP}{\textsf{NP}}
+\newcommand{\Poly}{\textsf{P}}
+
+%%%
+% A wide tilde for use with \iid
+\newcommand{\widesim}[2][1.5]{
+  \mathrel{\overset{#2}{\scalebox{#1}[1]{$\sim$}}}
+}
+\newcommand{\iid}{\mathbin{\widesim[2]{i.i.d.}}}
+%%%
+
+%%%
+% Better parentheses
+\let\originalleft\left
+\let\originalright\right
+\def\left#1{\mathopen{}\originalleft#1}
+\def\right#1{\originalright#1\mathclose{}}
+%%%
+
+%%%
+% Upright differential operator
+\newcommand{\dif}{\mathop{}\!\mathrm{d}}
+
+%%%
+% Proper spacing and punctuation following abbreviations
+\usepackage{xspace}
+\newcommand*{\ie}{\emph{i.e.,}\@\xspace}
+\newcommand*{\eg}{\emph{e.g.,}\@\xspace}
+
+\makeatletter
+\newcommand{\etal}{\emph{et al}\@ifnextchar.{}{.\@}}
+\makeatother
+
+\makeatletter
+\newcommand{\whp}{\emph{w.h.p}\@ifnextchar.{}{.\@}}
+\makeatother
+
+
+\newcommand{\centeripe}[1]{\begin{center}\Ipe{#1}\end{center}}
+
+\newcommand{\centerpsfig}[1]{\centerline{\psfig{#1}}}
+
+\newcommand{\seclabel}[1]{\label{sec:#1}}
+\newcommand{\Secref}[1]{Section~\ref{sec:#1}}
+\newcommand{\secref}[1]{\mbox{Section~\ref{sec:#1}}}
+
+\newcommand{\alglabel}[1]{\label{alg:#1}}
+\newcommand{\Algref}[1]{Algorithm~\ref{alg:#1}}
+\newcommand{\algref}[1]{\mbox{Algorithm~\ref{alg:#1}}}
+
+\newcommand{\applabel}[1]{\label{app:#1}}
+\newcommand{\Appref}[1]{Appendix~\ref{app:#1}}
+\newcommand{\appref}[1]{\mbox{Appendix~\ref{app:#1}}}
+
+\newcommand{\tablabel}[1]{\label{tab:#1}}
+\newcommand{\Tabref}[1]{Table~\ref{tab:#1}}
+\newcommand{\tabref}[1]{Table~\ref{tab:#1}}
+
+\newcommand{\figlabel}[1]{\label{fig:#1}}
+\newcommand{\Figref}[1]{Figure~\ref{fig:#1}}
+\newcommand{\figref}[1]{\mbox{Figure~\ref{fig:#1}}}
+
+\newcommand{\eqlabel}[1]{\label{eq:#1}}
+\renewcommand{\eqref}[1]{(\ref{eq:#1})}
+\newcommand{\myeqref}[1]{(\ref{eq:#1})}
+\newcommand{\Eqref}[1]{Equation~(\ref{eq:#1})}
+
+\newtheorem{thm}{Theorem}{\bfseries}{\itshape}
+\newcommand{\thmlabel}[1]{\label{thm:#1}}
+\newcommand{\thmref}[1]{Theorem~\ref{thm:#1}}
+\numberwithin{thm}{section}
+
+\newtheorem{lem}[thm]{Lemma}{\bfseries}{\itshape}
+\newcommand{\lemlabel}[1]{\label{lem:#1}}
+\newcommand{\lemref}[1]{Lemma~\ref{lem:#1}}
+
+\newtheorem{conj}[thm]{Conjecture}{\bfseries}{\itshape}
+\newcommand{\conjlabel}[1]{\label{lem:#1}}
+\newcommand{\conjref}[1]{Conjecture~\ref{lem:#1}}
+
+\newtheorem{cor}[thm]{Corollary}{\bfseries}{\itshape}
+\newcommand{\corlabel}[1]{\label{cor:#1}}
+\newcommand{\corref}[1]{Corollary~\ref{cor:#1}}
+
+\newtheorem{prop}[thm]{Proposition}{\bfseries}{\itshape}
+\newcommand{\proplabel}[1]{\label{prop:#1}}
+\newcommand{\propref}[1]{Proposition~\ref{prop:#1}}
+
+\newtheorem{clm}[thm]{Claim}{\bfseries}{\itshape}
+\newcommand{\clmlabel}[1]{\label{clm:#1}}
+\newcommand{\clmref}[1]{Claim~\ref{clm:#1}}
+
+\newtheorem{assumption}[thm]{Assumption}{\bfseries}{\rm}
+\newenvironment{ass}{\begin{assumption}\rm}{\end{assumption}}
+\newcommand{\asslabel}[1]{\label{ass:#1}}
+\newcommand{\assref}[1]{Assumption~\ref{ass:#1}}
+
+\newcommand{\proclabel}[1]{\label{alg:#1}}
+\newcommand{\procref}[1]{Procedure~\ref{alg:#1}}
+
+\theoremstyle{definition}
+
+\newtheorem{defn}[thm]{Definition}
+\newcommand{\defnlabel}[1]{\label{defn:#1}}
+\newcommand{\defnref}[1]{Definition~\ref{defn:#1}}
+
+\newtheorem{rem}[thm]{Remark}
+\newcommand{\remlabel}[1]{\label{rem:#1}}
+\newcommand{\remref}[1]{Remark~\ref{rem:#1}}
+
+\newtheorem{op}{Open Problem}
+\newcommand{\oplabel}[1]{\label{op:#1}}
+\newcommand{\opref}[1]{Open Problem~\ref{op:#1}}
+\newtheorem{prb}{Problem}{\bfseries}{\rm}
+
+\theoremstyle{plain}
+
+\usepackage{hyperref}
+\usepackage[dvipsnames]{xcolor}
+\definecolor{linkblue}{named}{Blue}
+\hypersetup{colorlinks=true, linkcolor=linkblue,  anchorcolor=linkblue,
+citecolor=linkblue, filecolor=linkblue, menucolor=linkblue,
+urlcolor=linkblue} 
+
+\usepackage{hyphenat}
+
+\usepackage[titletoc]{appendix}
+
+\begin{document}
+\title[On Discovery Of The Seed In UA Trees]{On The Discovery Of The Seed \\ In Uniform Attachment Trees}
+\date{\today}
+\author{Luc Devroye}
+\author{Tommy Reddad}
+\email{lucdevroye@gmail.com \\
+tommy.reddad@gmail.com}
+\address{School of Computer Science, McGill University, 3480 University Street, Montr\'{e}al, Qu\'{e}bec, Canada, H3A 2K6}
+
+\subjclass[2010]{Primary: 05C80}
+\keywords{Random trees, seed tree, root finding, uniform attachment.}
+
+\maketitle
+
+\begin{abstract}
+  We investigate the size of vertex confidence sets for including part
+  of (or the entirety of) the seed in seeded uniform attachment trees,
+  given knowledge of some of the seed's properties, and with a
+  prescribed probability of failure. We also study the problem of
+  identifying the leaves of a seed in a seeded uniform attachment
+  tree, given knowledge of the positions of all internal nodes of the
+  seed.
+\end{abstract}
+
+\section{Introduction}
+\input{introduction}
+
+\section{Finding a single vertex in the seed}\seclabel{heart}
+  \subsection{An upper bound}\seclabel{heart-upper}
+  \input{heart-upper}
+  \subsection{The maximum likelihood estimate}\seclabel{mle}
+  \input{mle}
+  \subsection{A vertex-confidence set with size subpolynomial in $(1/\eps)$} \seclabel{subpolynomial}
+  \input{subpolynomial}
+  \subsection{A lower bound}\seclabel{heart-lower}
+  \input{heart-lower}
+\section{Finding all seed vertices}\seclabel{whole}
+  \subsection{Upper bounds}\seclabel{whole-upper}
+  \input{whole-upper}
+  \subsection{Lower bounds}\seclabel{whole-lower}
+  \input{whole-lower}
+  
+\section{Finding all leaves given the skeleton}\seclabel{leaves}
+\input{skeleton}
+
+\section{Open problems}
+\input{openproblems}
+
+\bibliography{main}
+\bibliographystyle{abbrv}
+
+\appendix
+
+\begin{appendices}
+
+\section{Supporting lemmas}\applabel{app}
+\input{appendix}
+
+\end{appendices}
+
+\end{document}

@@ -1,0 +1,81 @@
+Our work raises several open problems.
+\begin{enumerate}[label=\textit{\arabic*.}]
+\item \textit{Joint dependence on $k$ and $\eps$.} From \thmref{heart-upper}, we learn that $K^*(k, \ell, \eps)$
+  grows roughly like $e^{1/k}$ for fixed $\eps$, and like
+  $\mathrm{poly}(1/\eps)$ for fixed $k$;
+  \thmref{heart-upper-subpolynomial} tells us that
+  $K^*(k, \ell, \eps)$ grows like $e^{1/\log \log k}$ for fixed
+  $\eps$, and
+  $\exp\left\{\frac{\log (1/\eps)}{\log \log (1/\eps)}\right\}$ for
+  fixed $k$. Can we find an upper bound on $K^*(k, \ell, \eps)$ which
+  jointly behaves well as a function of $\eps$ and $k$, like
+  \[
+    K^*(k, \ell, \eps) \overset{?}{\le} c_1 \exp\left\{c_2 \frac{\log (1/\eps)}{\log \log (1/\eps) + k} \right\} .
+  \]
+  Should there be some dependence on $\ell$?
+
+\item \textit{Tight bounds for $K$ and $K^*$.} What is the true dependence of $K(k, \ell, \eps)$ and
+  $K^*(k, \ell, \eps)$ on $k$, $\ell$, and $\eps$? In particular, we
+  ask
+  \[
+    K^*(k, \ell, \eps) \overset{?}{\le} c_1 \exp\left\{c_2 \sqrt{\frac{\log
+          (1/\eps)}{k}} \right\} .
+  \]
+  This question remains open even for $k = 1$, where the best and only
+  known result is from \cite{finding-adam}:
+  \[
+    c_1 \exp\left\{ c_2 \sqrt{\log (1/\eps)} \right\}
+    \le K(\eps) \le c_3 \exp\left\{c_4 \frac{\log (1/\eps)}{\log
+          \log(1/\eps)} \right\} .
+  \]
+
+\item \textit{Lower bounds for constant $\eps$.} Restating
+  \conjref{whole-lower-large-eps-conj}, we ask: Can it be shown that
+  for constants $c, \eps_0$ and sufficiently large $k$ and $\ell$,
+  \[
+    K(k, \ell, \eps_0) \overset{?}{\ge} c k \ell .
+  \]
+  
+\item \textit{Partial vertex-confidence sets.}
+  What about the optimal quantities $K^i(k, \ell, \eps)$ for the
+  smallest sets which intersect at least $i$ nodes of seed with
+  probability at least $1 - \eps$, where $1 \le i \le k$? It is clear
+  that
+  \[
+    K^*(k, \ell, \eps) \le K^i(k, \ell, \eps) \le K(k, \ell, \eps) .
+  \]
+  Can this obvious result be refined?
+
+\item \textit{The preferential attachment model.} Can one prove
+  analogous upper and lower bounds on $K^i(k, \ell, \eps)$ in the
+  seeded (superlinear/sublinear) preferential attachment tree
+  $\UA_\alpha(n, S)$ for $\alpha > 0$? Jog and
+  Loh~\cite{ling-centrality} showed that, for a given $\eps$, there
+  are $c, N$ depending on $\eps$ such that for $K \ge N$ satisfying
+  \[
+    \frac{c K (\log K)^{\frac{2}{1 - \alpha}}}{(K - 1)2} \le \frac{\eps}{4} ,
+  \]
+  there exists a vertex-confidence set of size $K$ which includes the
+  root in $\UA_\alpha(n)$ with probability at least $1 - \eps$.
+
+\item \textit{Worst-case gnostic seed recovery.} We showed how when
+  the seed is known to be a star $S_k$, only a constant factor of $k$
+  nodes were required to recover the seed with probability at least
+  $1/2$. Is there any seed $S$ for which $K(S, 1/2) = \omega_k(k)$,
+  and in general what is the dependence on $k$ of
+  \[
+    \max_{S \colon |S| = k} K(S, 1/2) \, ?
+  \]
+  Any seed with $K(S, 1/2) = \omega_k(k)$ must have
+  $\ell = \omega_k(1)$, since by \eqref{whole-harder-than-given} and
+  \thmref{whole-upper}, 
+  \[
+    K(S, 1/2) \le K(k, \ell, 1/2) \le c k \ell .
+  \]
+  As natural candidates, we suggest that $S$ is a complete binary
+  tree, or a \emph{comb graph}, namely that
+  $V(S) = \{u_1, v_1, u_2, v_2, \dots, u_{k/2}, v_{k/2}\}$, and
+  \[
+    E(S) = \Big\{\{u_i, u_{i + 1}\} \colon 1 \le i \le k/2 - 1\}\Big\} \cup \Big\{\{u_i, v_i\} \colon 1 \le i \le k \Big\} .
+  \]
+\end{enumerate}
